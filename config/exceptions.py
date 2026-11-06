@@ -17,3 +17,5 @@ def custom_exception_handler(exc, context):
         "errors": errors,
     }
     return response
+
+
