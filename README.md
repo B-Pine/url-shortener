@@ -50,10 +50,11 @@ Key design decisions:
 
 ```
 url-shortener/
-├── config/              # Project settings, root URLs, exception handler
+├── config/              # Project settings, root URLs, exception handler, middleware
 │   ├── settings.py
 │   ├── urls.py
-│   └── exceptions.py
+│   ├── exceptions.py
+│   └── middleware.py
 ├── accounts/            # Custom User model
 ├── shortener/           # Short URL model, serializer, service, views
 │   ├── models.py
@@ -61,8 +62,9 @@ url-shortener/
 │   ├── services.py
 │   ├── views.py
 │   └── urls.py
-├── Dockerfile
-├── docker-compose.yml
+├── Dockerfile                    # Multi-stage build
+├── docker-compose.yml            # Base (production-like) setup
+├── docker-compose.override.yml   # Development: hot reload
 ├── requirements.txt
 ├── .env.example
 └── manage.py
@@ -124,13 +126,25 @@ docker compose down -v           # stop and delete the database volume
 
 ### Creating migrations after model changes
 
-Migration files are created on the host (so they're saved in the repository), using SQLite for that single command because the `db` host only exists inside Docker:
+In development the project folder is mounted into the container, so migration files created there appear directly in your repository:
 
 ```bash
-DATABASE_URL=sqlite:///db.sqlite3 python manage.py makemigrations
-docker compose up --build -d
+docker compose exec web python manage.py makemigrations
 docker compose exec web python manage.py migrate
 ```
+
+## Development vs Production
+
+| | Development | Production |
+|---|---|---|
+| Command | `docker compose up -d` | `docker compose -f docker-compose.yml up -d` |
+| Code changes | Picked up automatically (bind mount + Gunicorn `--reload`) | Require an image rebuild |
+| Gunicorn workers | 1 | Set with `WEB_CONCURRENCY` in `.env` |
+| `DEBUG` | `True` | `False` |
+
+`docker compose up` automatically merges `docker-compose.override.yml`, which holds the development-only settings. Passing `-f docker-compose.yml` uses only the base file, giving a production-like setup.
+
+The `Dockerfile` is multi-stage: the first stage installs dependencies, and the final image copies only the installed packages and the code, keeping it small. Every request is logged to the console with its method, path, status code, and duration (`docker compose logs -f web`).
 
 ## API Endpoints
 
