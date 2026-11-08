@@ -46,30 +46,6 @@ Key design decisions:
 - **302 redirects.** Temporary redirects make every click reach the server, which click analytics will need later (a 301 would be cached by browsers).
 - **Standardized errors.** Every API error uses the same JSON shape (see below).
 
-## Project Structure
-
-```
-url-shortener/
-├── config/              # Project settings, root URLs, exception handler, middleware
-│   ├── settings.py
-│   ├── urls.py
-│   ├── exceptions.py
-│   └── middleware.py
-├── accounts/            # Custom User model
-├── shortener/           # Short URL model, serializer, service, views
-│   ├── models.py
-│   ├── serializers.py
-│   ├── services.py
-│   ├── views.py
-│   └── urls.py
-├── Dockerfile                    # Multi-stage build
-├── docker-compose.yml            # Base (production-like) setup
-├── docker-compose.override.yml   # Development: hot reload
-├── requirements.txt
-├── .env.example
-└── manage.py
-```
-
 ## Setup
 
 **Prerequisites:** Docker Desktop and Git.
