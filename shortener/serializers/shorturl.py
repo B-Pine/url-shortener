@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from .models import ShortURL
-from .services import create_short_url
+from shortener.models import ShortURL
+from ..services import create_short_url
 
 
 class ShortURLSerializer(serializers.ModelSerializer):

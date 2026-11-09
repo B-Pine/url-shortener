@@ -1,11 +1,4 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
-from django.views.decorators.http import require_GET
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
-from rest_framework.decorators import api_view
-
-from .models import ShortURL
-from .serializers import ShortURLSerializer
 
 from drf_spectacular.utils import (
     OpenApiExample,
@@ -13,6 +6,9 @@ from drf_spectacular.utils import (
     extend_schema,
     extend_schema_view,
 )
+
+from shortener.models import ShortURL
+from shortener.serializers.shorturl import ShortURLSerializer
 
 
 @extend_schema_view(
@@ -46,9 +42,3 @@ from drf_spectacular.utils import (
 class ShortURLCreateView(CreateAPIView):
     queryset = ShortURL.objects.all()
     serializer_class = ShortURLSerializer
-
-
-@api_view(["GET"])
-def redirect_view(request, short_code):
-    url = get_object_or_404(ShortURL, short_code=short_code)
-    return HttpResponseRedirect(url.original_url)
