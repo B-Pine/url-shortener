@@ -23,14 +23,14 @@ def create_short_url(original_url, code_generator=generate_code):
     return ShortURL.objects.create(original_url=original_url, short_code=code)
 
 
-def record_click(url: ShortURL, ip_address, user_agent, referrers):
+def record_click(url: ShortURL, ip_address, user_agent, referrer):
     with transaction.atomic():
         ShortURL.objects.filter(pk=url.pk).update(click_count=F("click_count") + 1)
         Click.objects.create(
             url=url,
             ip_address=ip_address or None,
             user_agent=user_agent,
-            referrers=referrers[:2048]
+            referrer=referrer[:2048]
         )
         
 

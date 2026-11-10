@@ -9,7 +9,7 @@ class Click(models.Model):
     city = models.CharField(max_length=100, blank=True)
     country = models.CharField(max_length=100, blank=True)
     user_agent = models.CharField(blank=True)
-    referrers = models.URLField(blank=True, max_length=2048)
+    referrer = models.URLField(blank=True, max_length=2048)
 
     def __str__(self):
         return f"Click on {self.url.short_code} at {self.clicked_at}"
