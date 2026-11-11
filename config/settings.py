@@ -75,6 +75,7 @@ LOGGING = {
     },
     "loggers": {
         "config.middleware": {"handlers": ["console"], "level": "INFO"},
+        "django.db.backends": {"handlers": ["console"], "level": config("DB_LOG_LEVEL", default="INFO")},
     },
 }
 
