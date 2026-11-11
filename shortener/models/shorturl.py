@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 from .tag import Tag
-from .managers import ShortURLQuerySet
+from .managers import URLManager
 
 
 class ShortURL(models.Model):
@@ -24,7 +24,7 @@ class ShortURL(models.Model):
     click_count = models.PositiveIntegerField(default=0)
     tags = models.ManyToManyField(Tag, related_name="urls", blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    objects = ShortURLQuerySet.as_manager()
+    objects = URLManager()
 
     def __str__(self):
         return f"{self.short_code} -> {self.original_url}"

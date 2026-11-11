@@ -13,3 +13,7 @@ class ShortURLQuerySet(models.QuerySet):
 
     def popular_urls(self):
         return self.order_by("-click_count", "-created_at")
+
+
+class URLManager(models.Manager.from_queryset(ShortURLQuerySet)):
+    pass
