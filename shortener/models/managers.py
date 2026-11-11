@@ -14,6 +14,9 @@ class ShortURLQuerySet(models.QuerySet):
     def popular_urls(self):
         return self.order_by("-click_count", "-created_at")
 
+    def with_relations(self):
+        return self.select_related("owner").prefetch_related("tags")
+
 
 class URLManager(models.Manager.from_queryset(ShortURLQuerySet)):
     pass
