@@ -11,11 +11,15 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
+RUN useradd --create-home appuser
+
 WORKDIR /app
 
 COPY --from=builder /install /usr/local
 COPY . .
 
 RUN SECRET_KEY=build-only DATABASE_URL=sqlite:///tmp.db python manage.py collectstatic --noinput
+
+USER appuser
 
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--threads", "4"]
