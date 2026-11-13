@@ -1,3 +1,3 @@
-from .shorturl import  ShortURLSerializer
+from .shorturl import ShortURLSerializer
 
 __all__ = ["ShortURLSerializer"]

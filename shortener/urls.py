@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import ShortURLCreateView
+from .views import ShortURLListCreateView
 
 urlpatterns = [
-    path("urls/", ShortURLCreateView.as_view(), name="url-create"),
+    path("urls/", ShortURLListCreateView.as_view(), name="url-list"),
 ]
