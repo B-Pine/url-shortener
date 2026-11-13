@@ -29,5 +29,8 @@ repos:
           - djangorestframework
           - drf-spectacular
           - python-decouple
+          - psycopg==3.3.7
+          - psycopg-binary==3.3.7
           - dj-database-url
           - whitenoise
+          - django-filter==26.2

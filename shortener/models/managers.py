@@ -18,5 +18,4 @@ class ShortURLQuerySet(models.QuerySet):
         return self.select_related("owner").prefetch_related("tags")
 
 
-class URLManager(models.Manager.from_queryset(ShortURLQuerySet)):
-    pass
+URLManager = models.Manager.from_queryset(ShortURLQuerySet)
