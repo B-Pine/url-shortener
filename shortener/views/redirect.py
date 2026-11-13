@@ -13,6 +13,6 @@ def redirect_view(request, short_code):
         url=url,
         ip_address=request.META.get("REMOTE_ADDR"),
         user_agent=request.META.get("HTTP_USER_AGENT", ""),
-        referrer=request.META.get("HTTP_REFERER", "")
+        referrer=request.META.get("HTTP_REFERER", ""),
     )
     return HttpResponseRedirect(url.original_url)
