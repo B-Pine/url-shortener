@@ -13,8 +13,6 @@ class ShortURL(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="urls",
-        null=True,
-        blank=True,
     )
     is_active = models.BooleanField(default=True)
     expires_at = models.DateTimeField(null=True, blank=True)
