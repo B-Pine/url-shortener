@@ -1,8 +1,8 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
-from .tag import Tag
 from .managers import URLManager
+from .tag import Tag
 
 
 class ShortURL(models.Model):

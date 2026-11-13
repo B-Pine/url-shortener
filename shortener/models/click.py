@@ -1,4 +1,5 @@
 from django.db import models
+
 from .shorturl import ShortURL
 
 

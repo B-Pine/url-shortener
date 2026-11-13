@@ -6,3 +6,5 @@ __pycache__/
 *.pyc
 db.sqlite3
 staticfiles/
+.mypy_cache/
+.ruff_cache/

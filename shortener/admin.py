@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import ShortURL, Click, Tag
+from .models import Click, ShortURL, Tag
+
 
 @admin.register(ShortURL)
 class ShortURLAdmin(admin.ModelAdmin):
@@ -15,7 +16,7 @@ class ShortURLAdmin(admin.ModelAdmin):
     @admin.display(description="Tags")
     def tag_list(self, obj):
         return ", ".join(tag.name for tag in obj.tags.all())
-    
+
 
 @admin.register(Click)
 class ClickAdmin(admin.ModelAdmin):
