@@ -2,9 +2,10 @@ import secrets
 import string
 from datetime import timedelta
 
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Count, F, Q
 from django.utils import timezone
+from rest_framework.exceptions import APIException
 
 from .models import Click, ShortURL
 
@@ -13,17 +14,28 @@ CODE_LENGTH = 7
 MAX_ATTEMPTS = 5
 
 
+class ShortCodeUnavailable(APIException):
+    status_code = 503
+    default_detail = "Could not generate a unique short code. Please try again."
+    default_code = "short_code_unavailable"
+
+
 def generate_code(length=CODE_LENGTH):
     return "".join(secrets.choice(ALPHABET) for _ in range(length))
 
 
-def create_short_url(original_url, code_generator=generate_code):
-    code = code_generator()
+def create_short_url(original_url, owner, code_generator=generate_code):
     for _ in range(MAX_ATTEMPTS):
-        if ShortURL.objects.filter(short_code=code).exists():
-            code = code_generator()
-        else:
-            return ShortURL.objects.create(original_url=original_url, short_code=code)
+        try:
+            with transaction.atomic():
+                return ShortURL.objects.create(
+                    original_url=original_url,
+                    short_code=code_generator(),
+                    owner=owner,
+                )
+        except IntegrityError:
+            continue
+    raise ShortCodeUnavailable()
 
 
 def record_click(url: ShortURL, ip_address, user_agent, referrer):
