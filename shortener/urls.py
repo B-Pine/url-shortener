@@ -1,7 +1,8 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
-from .views import ShortURLListCreateView
+from .views import ShortURLViewSet
 
-urlpatterns = [
-    path("urls/", ShortURLListCreateView.as_view(), name="url-list"),
-]
+router = DefaultRouter()
+router.register("urls", ShortURLViewSet, basename="shorturl")
+
+urlpatterns = router.urls

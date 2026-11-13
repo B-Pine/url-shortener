@@ -5,7 +5,7 @@ from drf_spectacular.utils import (
     extend_schema,
     extend_schema_view,
 )
-from rest_framework.generics import ListCreateAPIView
+from rest_framework import viewsets
 
 from shortener.filters import ShortURLFilter, StableOrderingFilter
 from shortener.models import ShortURL
@@ -40,11 +40,20 @@ from shortener.serializers.shorturl import ShortURLSerializer
             ),
         },
     ),
+    retrieve=extend_schema(summary="Retrieve one of your short URLs"),
+    update=extend_schema(summary="Update one of your short URLs"),
+    partial_update=extend_schema(summary="Partially update one of your short URLs"),
+    destroy=extend_schema(summary="Delete one of your short URLs"),
 )
-class ShortURLListCreateView(ListCreateAPIView):
-    queryset = ShortURL.objects.prefetch_related("tags")
+class ShortURLViewSet(viewsets.ModelViewSet):
     serializer_class = ShortURLSerializer
+    lookup_field = "short_code"
     filter_backends = [DjangoFilterBackend, StableOrderingFilter]
     filterset_class = ShortURLFilter
     ordering_fields = ["created_at", "click_count"]
     ordering = ["-created_at"]
+
+    def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return ShortURL.objects.none()
+        return ShortURL.objects.filter(owner=self.request.user).prefetch_related("tags")
